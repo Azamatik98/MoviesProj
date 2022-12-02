@@ -1,51 +1,51 @@
-import React from "react";
+import React, { useState, useEffect } from "react";
 import MovieList from "../components/MovieList";
 import Seacrh from "../components/Search";
 import Preloader from "../components/Preloader";
 
 const API_KEY = process.env.REACT_APP_API_KEY;
 
-class Main extends React.Component {
-  state = {
-    movieList: [],
-    loading: true,
-  };
+function Main() {
+  const [movieList, setMovieList] = useState([]);
+  const [loading, setLoading] = useState(true);
 
-  componentDidMount() {
-    fetch(`https://www.omdbapi.com/?apikey=${API_KEY}&s=avatar`)
-      .then((response) => response.json())
-      .then((data) => this.setState({ movieList: data.Search, loading: false }))
-      .catch((error) => {
-        console.error(error);
-        this.setState({ loading: false });
-      });
-  }
-
-  searchMovies = (str, type = "all") => {
-    this.setState({ loading: true });
+  const searchMovies = (str, type = "all") => {
+    setLoading(true);
     fetch(
       `https://www.omdbapi.com/?apikey=${API_KEY}&s=${str}${
         type !== "all" ? `&type=${type}` : ""
       }`
     )
       .then((response) => response.json())
-      .then((data) => this.setState({ movieList: data.Search, loading: false }))
+      .then((data) => {
+        setLoading(false);
+        setMovieList(data.Search);
+      })
       .catch((error) => {
         console.error(error);
-        this.setState({ loading: false });
+        setLoading(false);
       });
   };
 
-  render() {
-    const { movieList, loading } = this.state;
+  useEffect(() => {
+    fetch(`https://www.omdbapi.com/?apikey=${API_KEY}&s=avatar`)
+      .then((response) => response.json())
+      .then((data) => {
+        setMovieList(data.Search);
+        setLoading(false);
+      })
+      .catch((error) => {
+        console.error(error);
+        setLoading(false);
+      });
+  }, []);
 
-    return (
-      <main className="container content">
-        <Seacrh searchMovies={this.searchMovies} />
-        {loading ? <Preloader /> : <MovieList movieList={movieList} />}
-      </main>
-    );
-  }
+  return (
+    <main className="container content">
+      <Seacrh searchMovies={searchMovies} />
+      {loading ? <Preloader /> : <MovieList movieList={movieList} />}
+    </main>
+  );
 }
 
 export default Main;
