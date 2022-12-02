@@ -1,6 +1,6 @@
 function Header() {
   return (
-    <nav className="green darken-1">
+    <nav className="red darken-2">
       <div className="nav-wrapper">
         <a href="#" className="brand-logo">
           React Movies

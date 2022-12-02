@@ -34,7 +34,7 @@ class Seacrh extends React.Component {
             onKeyDown={this.handleKey}
           />
           <button
-            className="btn search-btn"
+            className="btn search-btn pink darken-2"
             onClick={() =>
               this.props.searchMovies(this.state.search, this.state.type)
             }
